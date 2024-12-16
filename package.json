@@ -1,0 +1,17 @@
+{
+  "name": "endpoints",
+  "version": "1.0.0",
+  "description": "**Auth endpoints**\r 1. post /auth/register (registrera ny användare, ange användarnamn och lösenord som hashas och saltas innan lagring)\r 2. post /auth/token (generar jwt token för inloggade användare)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.0"
+  }
+}
