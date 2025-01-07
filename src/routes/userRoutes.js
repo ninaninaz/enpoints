@@ -3,18 +3,9 @@ const userController = require("../controllers/userController")
 const express = require("express")
 const router = express.Router()
 
-// router.get("/", (req, res) => {
-// 	res.send({success:"true"});
-// })
-
-router.post("/", userController.registerUser)
-
-// router.put("/", (req, res) => {
-//         res.send({success:"true"});
-// })
-
-// router.delete("/", (req, res) => {
-//         res.send({success:"true"});
-// })
+router.post("/register", userController.registerUser)
+router.post("/login", userController.loginUser)
+router.get("/all", userController.getUsers)
+router.delete("/delete", userController.delete)
 
 module.exports = router
