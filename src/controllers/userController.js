@@ -1,11 +1,16 @@
 const User = require("../models/User")
+const bcrypt = require('bcryptjs');
+
 
 const userController = {
     registerUser: async (req, res) => {
         const { username, password } = req.body
 
         try {
-            const newUser = new User({ username, password })
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(password, salt);
+
+            const newUser = new User({ username, password: hashedPassword })
             const user = await newUser.save()
             res.status(201).json(user)
         } catch (error) {
@@ -15,15 +20,20 @@ const userController = {
     },
     loginUser: async (req, res) => {
         try {
-            const found = await User.findOne(req.body).exec()
 
-            if (found) {
-                res.send(200)
+            const matchedUsername = await User.findOne({username: req.body.username}).exec()
+
+            if (matchedUsername) {
+              const matchedPassword = bcrypt.compareSync(req.body.password, matchedUsername.password)
+              if (matchedPassword) {res.send(200)}
+              else { 
+                res.status(401).json("Fel lösenord")
+              }
             } else {
-                res.status(401).json("Ogiltiga uppgifter")
+                res.status(401).json("Fel användarnamn")
             }
-        } catch {
-            res.status(400).json("Dålig input")
+        } catch (error) {
+            res.status(400).json(error)
         }
     },
     getUsers: async (req, res) => {
