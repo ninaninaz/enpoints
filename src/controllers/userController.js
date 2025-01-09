@@ -1,17 +1,16 @@
 const User = require("../models/User")
-const bcrypt = require('bcryptjs');
-
+const bcrypt = require("bcryptjs")
 
 const userController = {
     registerUser: async (req, res) => {
         const { username, password } = req.body
 
         try {
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(password, salt);
-
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
             const newUser = new User({ username, password: hashedPassword })
             const user = await newUser.save()
+
             res.status(201).json(user)
         } catch (error) {
             console.error(error.message)
@@ -19,16 +18,18 @@ const userController = {
         }
     },
     loginUser: async (req, res) => {
-        try {
+        const { username, password } = req.body
 
-            const matchedUsername = await User.findOne({username: req.body.username}).exec()
+        try {
+            const matchedUsername = await User.findOne({ username: username }).exec()
 
             if (matchedUsername) {
-              const matchedPassword = bcrypt.compareSync(req.body.password, matchedUsername.password)
-              if (matchedPassword) {res.send(200)}
-              else { 
-                res.status(401).json("Fel lösenord")
-              }
+                const matchedPassword = bcrypt.compareSync(password, matchedUsername.password)
+                if (matchedPassword) {
+                    res.send(200)
+                } else {
+                    res.status(401).json("Fel lösenord")
+                }
             } else {
                 res.status(401).json("Fel användarnamn")
             }
@@ -45,7 +46,8 @@ const userController = {
         }
     },
     delete: async (req, res) => {
-        const deleted = await User.findOneAndDelete({ _id: req.body.id })
+        const { id } = req.body
+        const deleted = await User.findOneAndDelete({ _id: id })
         deleted
             ? res.send(`Tog bort användare: ${deleted}`)
             : res.status(400).json("Misslyckades att ta bort")
