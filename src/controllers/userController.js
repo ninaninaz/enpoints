@@ -26,7 +26,7 @@ const userController = {
             if (matchedUsername) {
                 const matchedPassword = bcrypt.compareSync(password, matchedUsername.password)
                 if (matchedPassword) {
-                    res.send(200)
+                    res.status(200)
                 } else {
                     res.status(401).json("Fel lösenord")
                 }
@@ -62,9 +62,11 @@ const userController = {
         const user_id = req.params.id
         const { username, password } = req.body
         try {
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
             const updatedUser = await User.findByIdAndUpdate(
                 user_id,
-                { username, password },
+                { username, password: hashedPassword },
                 { new: true }
             )
             if (!updatedUser) {
