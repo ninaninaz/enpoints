@@ -46,7 +46,8 @@ const userController = {
         }
     },
     delete: async (req, res) => {
-        const { id } = req.body
+        //const { id } = req.body
+        const id = req.params.id
         const deleted = await User.findOneAndDelete({ _id: id })
         deleted
             ? res.send(`Tog bort användare: ${deleted}`)
