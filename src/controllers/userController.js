@@ -30,8 +30,6 @@ const userController = {
                 } else {
                     res.status(401).json("Fel lösenord")
                 }
-            } else {
-                res.status(401).json("Fel användarnamn")
             }
         } catch (error) {
             res.status(400).json(error)
@@ -43,6 +41,38 @@ const userController = {
             res.send(users)
         } catch {
             res.status(500).json("Serverfel")
+        }
+    },
+    getUser: async (req, res) => {
+        const user_id = req.params.id
+        try {
+            const user = await User.findById(user_id)
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' })
+            }
+            res.status(200).json(user)
+        } catch (error) {
+            console.error(error.message)
+            res.status(500).send('Server error')
+        }
+    },
+    putUser: async (req, res) => {
+        const user_id = req.params.id
+        const { username, password } = req.body
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                user_id, 
+                { username, password },
+                { new: true }
+            )
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' })
+            }
+            
+            res.status(200).json(updatedUser)
+        } catch (error) {
+            console.error(error.message)
+            res.status(500).send('Server error')
         }
     },
     delete: async (req, res) => {
