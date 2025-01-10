@@ -26,7 +26,7 @@ const userController = {
             if (matchedUsername) {
                 const matchedPassword = bcrypt.compareSync(password, matchedUsername.password)
                 if (matchedPassword) {
-                    res.status(200)
+                    res.status(200).json("Logged in")
                 } else {
                     res.status(401).json("Fel lösenord")
                 }
