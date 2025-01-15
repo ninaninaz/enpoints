@@ -17,26 +17,25 @@ const userController = {
             res.status(500).send("Serverfel")
         }
     },
-    loginUser: async (req, res) => {
-        const { username, password } = req.body
-
+    loginUser: async (username, password) => {
         try {
-            const matchedUsername = await User.findOne({ username: username }).exec()
-
-            if (matchedUsername) {
-                const matchedPassword = bcrypt.compareSync(password, matchedUsername.password)
-                if (matchedPassword) {
-                    res.status(200).json("Logged in")
-                } else {
-                    res.status(401).json("Fel lösenord")
-                }
-            } else {
-                res.status(401).json("Fel användarnamn")
+            const matchedUsername = await User.findOne({ username: username }).exec();
+    
+            if (!matchedUsername) {
+                return { status: 401, message: "Fel användarnamn" };
             }
+    
+            const matchedPassword = bcrypt.compareSync(password, matchedUsername.password);
+            if (!matchedPassword) {
+                return { status: 401, message: "Fel lösenord" };
+            }
+    
+            return { status: 200, user: matchedUsername };
         } catch (error) {
-            res.status(400).json(error)
+            return { status: 400, message: "Ett fel uppstod", error };
         }
     },
+    
     getUsers: async (req, res) => {
         try {
             const users = await User.find({})
