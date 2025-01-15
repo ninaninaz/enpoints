@@ -8,7 +8,7 @@ const userController = {
         try {
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(password, salt)
-            const newUser = new User({ username, password: hashedPassword })
+            const newUser = new User({ username, password: hashedPassword, role: 'user' })
             const user = await newUser.save()
 
             res.status(201).json(user)
