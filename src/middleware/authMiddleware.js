@@ -1,23 +1,19 @@
-const jwt = require ('jsonwebtoken');
+const jwt = require("jsonwebtoken")
 
 const verifyToken = (req, res, next) => {
-    /*if (!req.cookies){
-        res.sendStatus(400)
-    }*/
-    const token = req.cookies.accessToken; 
+    const token = req.cookies.accessToken
 
     if (token) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) {
-                return res.sendStatus(403);               
+                return res.sendStatus(403)
             }
-            req.user = user;
-            next();
-        });
+            req.user = user
+            next()
+        })
     } else {
-        res.sendStatus(401);
+        res.sendStatus(401)
     }
-    
-};
+}
 
 module.exports = verifyToken
