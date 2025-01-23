@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" })
+require("dotenv").config()
 const app = require("./app.js")
 const path = require("path")
 const connectDB = require("./config/db")

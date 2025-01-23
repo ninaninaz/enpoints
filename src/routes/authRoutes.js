@@ -1,5 +1,6 @@
 const userController = require("../controllers/userController")
 const jwt = require('jsonwebtoken')
+const verifyToken = require ('../middleware/authMiddleware');
 
 const express = require("express")
 const router = express.Router()
@@ -40,4 +41,7 @@ router.post("/login", async (req, res) => {
     }
 })
 
+router.get('/protected', verifyToken, (req, res) => {
+    res.send('Welcome to the protected area!');
+});
 module.exports = router

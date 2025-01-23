@@ -1,6 +1,23 @@
-const authMiddleware = (req, res, next) => {
-    console.log("test")
-    next()
-}
+const jwt = require ('jsonwebtoken');
 
-module.exports = authMiddleware
+const verifyToken = (req, res, next) => {
+    /*if (!req.cookies){
+        res.sendStatus(400)
+    }*/
+    const token = req.cookies.accessToken; 
+
+    if (token) {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);               
+            }
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+    
+};
+
+module.exports = verifyToken
