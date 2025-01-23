@@ -9,6 +9,7 @@ router.use(verifyToken)
 router.get("/conversations/", messagesController.getConversations)
 router.get("/", messagesController.getMessages)
 router.post("/", messagesController.createConversation)
-router.delete("/messages/", messagesController.deleteMessage)
+router.put("/:id", messagesController.addMessageToConversation)
+router.delete("/:id", messagesController.deleteMessage)
 
 module.exports = router

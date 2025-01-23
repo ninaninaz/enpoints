@@ -11,14 +11,15 @@ router.post("/login", async (req, res) => {
     const authResult = await userController.loginUser(username, password)
 
     if (authResult.status === 200) {
+
         const accessToken = jwt.sign(
-            { id: authResult.user.id, name: username },
+            { id: authResult.user.id, name: username, role: authResult.user.role },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '15m' }
         )
         
         const refreshToken = jwt.sign(
-            { id: authResult.user.id, name: username },
+            { id: authResult.user.id, name: username, role: authResult.user.role },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '7d' }
         )

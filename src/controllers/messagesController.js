@@ -23,9 +23,42 @@ const messagesController = {
         })
         const conversation = await newConversation.save()
 
-        res.sendStatus(200)
+        res.status(200).json(conversation)
     },
-    deleteMessage: async (req, res) => {}
+    deleteMessage: async (req, res) => {
+        try {
+            const message = await Message.findById(req.params.id)
+            if (!message) {
+                return res.status(404).json({ error: 'Meddelandet kunde inte hittas' })
+            }
+            await message.deleteOne()
+            res.status(200).json({ message: 'Konversation raderad' })
+        } catch(error) {
+            console.log(error)
+            res.status(500).json({ error: 'Serverfel'})
+        }
+    },
+    addMessageToConversation: async (req, res) => {
+        try {
+            const user_id = req.user.id
+            const message = req.body.message
+            const conversation = await Message.findById(req.params.id)
+            
+            if (!conversation) {
+                return res.status(404).json({ error: 'Konversationen kunde inte hittas' })
+            }
+            conversation.conversation.push({
+                sentBy: user_id,
+                data: message
+            })
+            await conversation.save();
+            
+            res.status(200).json(conversation)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Serverfel' })
+        }
+    }
 }
 
 module.exports = messagesController
