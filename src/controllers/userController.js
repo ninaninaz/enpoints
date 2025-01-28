@@ -39,7 +39,7 @@ const userController = {
     getUsers: async (req, res) => {
         try {
             const users = await User.find({})
-            res.send(users)
+            res.status(200).send(users)
         } catch {
             res.status(500).json("Serverfel")
         }

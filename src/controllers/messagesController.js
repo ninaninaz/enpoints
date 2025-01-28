@@ -13,6 +13,14 @@ const messagesController = {
         }
     },
     getMessages: async (req, res) => {},
+    getAllConversations: async (req, res) => {
+        try {
+            const messages = await Message.find()
+            res.status(200).json(messages)
+        } catch {
+            res.status(500).json("Serverfel")
+        }
+    },
     createConversation: async (req, res) => {
         const { participants, message } = req.body
         const user_id = req.user.id
